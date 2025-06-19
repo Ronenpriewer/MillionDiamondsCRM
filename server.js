@@ -1,4 +1,3 @@
-
 const express = require('express');
 const cors = require('cors');
 const fetch = require('node-fetch');
@@ -9,6 +8,9 @@ app.use(cors());
 app.use(express.json());
 
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
+
+// ✅ Hardcoded target Google Apps Script URL
+const targetUrl = 'https://script.google.com/macros/s/AKfycbyveiUvPY2jkdkxKPe5Ol7R1HpAPwwCv0RWmm9u-8CbhCUEetFdhtjkhff5FhR5pvSyUQ/exec';
 
 async function getLatLng(address) {
   try {
@@ -29,13 +31,6 @@ async function getLatLng(address) {
 }
 
 async function handleBlessingPost(req, res) {
-  const targetUrl = req.query.url;
-
-  if (!targetUrl) {
-    console.error('❌ Missing ?url= parameter');
-    return res.status(400).json({ error: 'Missing ?url= parameter' });
-  }
-
   try {
     const body = req.body;
     const addressParts = [body.address, body.city, body.country].filter(Boolean).join(', ');
