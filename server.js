@@ -9,7 +9,7 @@ app.use(express.json());
 
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
 
-// ✅ NEW hardcoded target: Unified Sheet Script URL
+// ✅ Hardcoded Unified Sheet script URL
 const targetUrl = 'https://script.google.com/macros/s/AKfycbx5cUYw6AhWLwxNtvh2RN-J3Xk-ATxxSe2X1jVstaOUah-f_qqwXAxVtOh9I6_voUCi/exec';
 
 async function getLatLng(address) {
@@ -33,14 +33,17 @@ async function getLatLng(address) {
 async function handleBlessingPost(req, res) {
   try {
     const body = req.body;
+
+    // If lat/lng provided in the form, use them. Else try to geocode based on address.
     const addressParts = [body.address, body.city, body.country].filter(Boolean).join(', ');
-    const coords = await getLatLng(addressParts);
+    const coords = (body.latitude && body.longitude)
+      ? { lat: body.latitude, lng: body.longitude }
+      : await getLatLng(addressParts);
 
     const payload = {
       ...body,
-      latitude: coords.lat,
-      longitude: coords.lng,
-      source: body.source || 'MillionDiamondsForm'
+      latitude: String(coords.lat || ''),
+      longitude: String(coords.lng || ''),
     };
 
     console.log('📤 Sending to:', targetUrl);
