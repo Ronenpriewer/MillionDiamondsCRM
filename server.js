@@ -9,8 +9,8 @@ app.use(express.json());
 
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
 
-// ✅ Hardcoded target Google Apps Script URL
-const targetUrl = 'https://script.google.com/macros/s/AKfycbyveiUvPY2jkdkxKPe5Ol7R1HpAPwwCv0RWmm9u-8CbhCUEetFdhtjkhff5FhR5pvSyUQ/exec';
+// ✅ NEW hardcoded target: Unified Sheet Script URL
+const targetUrl = 'https://script.google.com/macros/s/AKfycbx5cUYw6AhWLwxNtvh2RN-J3Xk-ATxxSe2X1jVstaOUah-f_qqwXAxVtOh9I6_voUCi/exec';
 
 async function getLatLng(address) {
   try {
@@ -40,6 +40,7 @@ async function handleBlessingPost(req, res) {
       ...body,
       latitude: coords.lat,
       longitude: coords.lng,
+      source: body.source || 'MillionDiamondsForm'
     };
 
     console.log('📤 Sending to:', targetUrl);
